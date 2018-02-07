@@ -1,316 +1,297 @@
 /*
- * Copyright (C) 2016-2018 phantombot.tv
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * Copyright (C) 2016-2018 no body cares
  */
 
-/*
- * @author IllusionaryOne
- */
-
-/*
- * twitterPanel.js
- */
-
-(function() {
-
-    var modeIcon = [],
-        settingIcon = [],
-        settingMap = [];
-
-        modeIcon['false'] = "<i style=\"color: var(--main-color)\" class=\"fa fa-circle-o\" />";
-        modeIcon['true'] = "<i style=\"color: var(--main-color)\" class=\"fa fa-circle\" />";
-
-        settingIcon['false'] = "<i class=\"fa fa-circle-o\" />";
-        settingIcon['true'] = "<i class=\"fa fa-circle\" />";
-
-        settingMap['poll_mentions'] = "Poll Mentions";
-        settingMap['poll_retweets'] = "Poll Retweets";
-        settingMap['poll_hometimeline'] = "Poll Home Timeline";
-        settingMap['poll_usertimeline'] = "Poll User Timeline";
-
-        settingMap['post_online'] = "Post When Stream Goes Online";
-        settingMap['post_gamechange'] = "Post Game Change";
-        settingMap['post_update'] = "Post Timed Automatic Updates";
-
-        settingMap['reward_toggle'] = 'Toggle Rewards';
-        settingMap['reward_announce'] = 'Toggle Reward Announcements';
 
 
-    /**
-     * @function onMessage
-     */
-    function onMessage(message) {
-        var msgObject;
+(function () {
 
-        try {
-            msgObject = JSON.parse(message.data);
-        } catch (ex) {
-            return;
-        }
+    //var modeIcon = [],
+    //    settingIcon = [],
+    //    settingMap = [];
 
-        if (panelHasQuery(msgObject)) {
-            if (panelCheckQuery(msgObject, 'twitter_config')) {
-                var setting,
-                    value,
-                    pollhtml,
-                    posthtml;
+    //modeIcon['false'] = "<i style=\"color: var(--main-color)\" class=\"fa fa-circle-o\" />";
+    //modeIcon['true'] = "<i style=\"color: var(--main-color)\" class=\"fa fa-circle\" />";
 
-                pollhtml = '<table>';
-                posthtml = '<table>';
-                rewardhtml = '<table>';
+    //settingIcon['false'] = "<i class=\"fa fa-circle-o\" />";
+    //settingIcon['true'] = "<i class=\"fa fa-circle\" />";
 
-                for (idx in msgObject['results']) {
-                    setting = msgObject['results'][idx]['key'];
-                    value = msgObject['results'][idx]['value'];
+    //settingMap['poll_mentions'] = "Poll Mentions";
+    //settingMap['poll_retweets'] = "Poll Retweets";
+    //settingMap['poll_hometimeline'] = "Poll Home Timeline";
+    //settingMap['poll_usertimeline'] = "Poll User Timeline";
 
-                    // Update text/number values in form inputs.
-                    switch (setting) {
-                        case 'message_online' :
-                        case 'message_gamechange' :
-                        case 'message_update' :
-                        case 'polldelay_mentions' :
-                        case 'polldelay_retweets' :
-                        case 'polldelay_hometimeline' :
-                        case 'polldelay_usertimeline' :
-                        case 'postdelay_update' :
-                        case 'reward_points' :
-                        case 'reward_cooldown' :
-                            $('#' + setting + 'TweetInput').val(value);
-                            break;
-                    }
+    //settingMap['post_online'] = "Post When Stream Goes Online";
+    //settingMap['post_gamechange'] = "Post Game Change";
+    //settingMap['post_update'] = "Post Timed Automatic Updates";
 
-                    // Skip the reward_points and reward_cooldown.
-                    if (setting == 'reward_points' || setting == 'reward_cooldown') {
-                        continue;
-                    }
+    //settingMap['reward_toggle'] = 'Toggle Rewards';
+    //settingMap['reward_announce'] = 'Toggle Reward Announcements';
 
-                    // Build the poll options table.
-                    if (setting.indexOf('poll_') === 0) {
-                        pollhtml += '<tr class="textList">' +
-                                    '    <td>' + settingMap[setting] + '</td>' +
 
-                                    '    <td style="width: 25px">' +
-                                    '        <div id="twitterStatus_"' + idx + '">' + modeIcon[value] + '</div>' +
-                                    '    </td>' +
+    ///**
+    // * @function onMessage
+    // */
+    //function onMessage(message) {
+    //    var msgObject;
 
-                                    '    <td style="width: 25px">' +
-                                    '        <div data-toggle="tooltip" title="Enable" class="button"' +
-                                    '             onclick="$.toggleTwitter(\'' + setting + '\', \'true\', \'' + idx + '\')">' + settingIcon['true'] +
-                                    '        </div>' +
-                                    '    </td>' +
+    //    try {
+    //        msgObject = JSON.parse(message.data);
+    //    } catch (ex) {
+    //        return;
+    //    }
 
-                                    '    <td style="width: 25px">' +
-                                    '        <div data-toggle="tooltip" title="Disable" class="button"' +
-                                    '             onclick="$.toggleTwitter(\'' + setting + '\', \'false\', \'' + idx + '\')">' + settingIcon['false'] +
-                                    '        </div>' +
-                                    '    </td>' +
+    //    if (panelHasQuery(msgObject)) {
+    //        if (panelCheckQuery(msgObject, 'twitter_config')) {
+    //            var setting,
+    //                value,
+    //                pollhtml,
+    //                posthtml;
 
-                                    '</tr>';
-                    }
+    //            pollhtml = '<table>';
+    //            posthtml = '<table>';
+    //            rewardhtml = '<table>';
 
-                    // Build the post options table.
-                    if (setting.indexOf('post_') === 0) {
-                        posthtml += '<tr class="textList">' +
-                                    '    <td>' + settingMap[setting] + '</td>' +
+    //            for (idx in msgObject['results']) {
+    //                setting = msgObject['results'][idx]['key'];
+    //                value = msgObject['results'][idx]['value'];
 
-                                    '    <td style="width: 25px">' +
-                                    '        <div id="twitterStatus_"' + idx + '">' + modeIcon[value] + '</div>' +
-                                    '    </td>' +
+    //                // Update text/number values in form inputs.
+    //                switch (setting) {
+    //                    case 'message_online' :
+    //                    case 'message_gamechange' :
+    //                    case 'message_update' :
+    //                    case 'polldelay_mentions' :
+    //                    case 'polldelay_retweets' :
+    //                    case 'polldelay_hometimeline' :
+    //                    case 'polldelay_usertimeline' :
+    //                    case 'postdelay_update' :
+    //                    case 'reward_points' :
+    //                    case 'reward_cooldown' :
+    //                        $('#' + setting + 'TweetInput').val(value);
+    //                        break;
+    //                }
 
-                                    '    <td style="width: 25px">' +
-                                    '        <div data-toggle="tooltip" title="Enable" class="button"' +
-                                    '             onclick="$.toggleTwitter(\'' + setting + '\', \'true\', \'' + idx + '\')">' + settingIcon['true'] +
-                                    '        </div>' +
-                                    '    </td>' +
+    //                // Skip the reward_points and reward_cooldown.
+    //                if (setting == 'reward_points' || setting == 'reward_cooldown') {
+    //                    continue;
+    //                }
 
-                                    '    <td style="width: 25px">' +
-                                    '        <div data-toggle="tooltip" title="Disable" class="button"' +
-                                    '             onclick="$.toggleTwitter(\'' + setting + '\', \'false\', \'' + idx + '\')">' + settingIcon['false'] +
-                                    '        </div>' +
-                                    '    </td>' +
+    //                // Build the poll options table.
+    //                if (setting.indexOf('poll_') === 0) {
+    //                    pollhtml += '<tr class="textList">' +
+    //                                '    <td>' + settingMap[setting] + '</td>' +
 
-                                    '</tr>';
-                    }
+    //                                '    <td style="width: 25px">' +
+    //                                '        <div id="twitterStatus_"' + idx + '">' + modeIcon[value] + '</div>' +
+    //                                '    </td>' +
 
-                    // Build the rewtweet reward options table.
-                    if (setting.indexOf('reward_') === 0) {
-                        rewardhtml += '<tr class="textList">' +
-                                    '    <td>' + settingMap[setting] + '</td>' +
+    //                                '    <td style="width: 25px">' +
+    //                                '        <div data-toggle="tooltip" title="Enable" class="button"' +
+    //                                '             onclick="$.toggleTwitter(\'' + setting + '\', \'true\', \'' + idx + '\')">' + settingIcon['true'] +
+    //                                '        </div>' +
+    //                                '    </td>' +
 
-                                    '    <td style="width: 25px">' +
-                                    '        <div id="twitterStatus_"' + idx + '">' + modeIcon[value] + '</div>' +
-                                    '    </td>' +
+    //                                '    <td style="width: 25px">' +
+    //                                '        <div data-toggle="tooltip" title="Disable" class="button"' +
+    //                                '             onclick="$.toggleTwitter(\'' + setting + '\', \'false\', \'' + idx + '\')">' + settingIcon['false'] +
+    //                                '        </div>' +
+    //                                '    </td>' +
 
-                                    '    <td style="width: 25px">' +
-                                    '        <div data-toggle="tooltip" title="Enable" class="button"' +
-                                    '             onclick="$.toggleTwitter(\'' + setting + '\', \'true\', \'' + idx + '\')">' + settingIcon['true'] +
-                                    '        </div>' +
-                                    '    </td>' +
+    //                                '</tr>';
+    //                }
 
-                                    '    <td style="width: 25px">' +
-                                    '        <div data-toggle="tooltip" title="Disable" class="button"' +
-                                    '             onclick="$.toggleTwitter(\'' + setting + '\', \'false\', \'' + idx + '\')">' + settingIcon['false'] +
-                                    '        </div>' +
-                                    '    </td>' +
+    //                // Build the post options table.
+    //                if (setting.indexOf('post_') === 0) {
+    //                    posthtml += '<tr class="textList">' +
+    //                                '    <td>' + settingMap[setting] + '</td>' +
 
-                                    '</tr>';
-                    }
+    //                                '    <td style="width: 25px">' +
+    //                                '        <div id="twitterStatus_"' + idx + '">' + modeIcon[value] + '</div>' +
+    //                                '    </td>' +
 
-                }
-                pollhtml += '</table>';
-                posthtml += '</table>';
-                rewardhtml += '</table>';
+    //                                '    <td style="width: 25px">' +
+    //                                '        <div data-toggle="tooltip" title="Enable" class="button"' +
+    //                                '             onclick="$.toggleTwitter(\'' + setting + '\', \'true\', \'' + idx + '\')">' + settingIcon['true'] +
+    //                                '        </div>' +
+    //                                '    </td>' +
 
-                $('#twitterPollTable').html(pollhtml);
-                $('#twitterPostTable').html(posthtml);
-                $('#twitterRewardTable').html(rewardhtml);
-                $('[data-toggle="tooltip"]').tooltip();
-            }
-        }
-    }
+    //                                '    <td style="width: 25px">' +
+    //                                '        <div data-toggle="tooltip" title="Disable" class="button"' +
+    //                                '             onclick="$.toggleTwitter(\'' + setting + '\', \'false\', \'' + idx + '\')">' + settingIcon['false'] +
+    //                                '        </div>' +
+    //                                '    </td>' +
 
-    /**
-     * @function doQuery
-     */
-    function doQuery() {
-        sendDBKeys('twitter_config', 'twitter');
-    }
+    //                                '</tr>';
+    //                }
 
-    /**
-     * @function toggleTwitter
-     * @param {String} module
-     */
-    function toggleTwitter(setting, value, idx) {
-        $("#twitterStatus_" + idx).html("<i style=\"color: var(--main-color)\" class=\"fa fa-spinner fa-spin\" />");
-        sendDBUpdate('twitter_update', 'twitter', setting, value);
-        setTimeout(function() { doQuery(); }, TIMEOUT_WAIT_TIME);
-    }
+    //                // Build the rewtweet reward options table.
+    //                if (setting.indexOf('reward_') === 0) {
+    //                    rewardhtml += '<tr class="textList">' +
+    //                                '    <td>' + settingMap[setting] + '</td>' +
 
-    /**
-     * @function postTweet
-     */
-    function postTweet() {
-        var value = $('#postTweetInput').val();
-        if (value.length > 0) {
-            $('#postTweetInput').val('');
-            sendCommand('twitter post ' + value);
-        }
-    }
+    //                                '    <td style="width: 25px">' +
+    //                                '        <div id="twitterStatus_"' + idx + '">' + modeIcon[value] + '</div>' +
+    //                                '    </td>' +
 
-    /**
-     * @function updateDataTwitter
-     * @param {String} dbKey
-     */
-    function updateDataTwitter(dbKey) {
-        var value = $('#' + dbKey + 'TweetInput').val();
+    //                                '    <td style="width: 25px">' +
+    //                                '        <div data-toggle="tooltip" title="Enable" class="button"' +
+    //                                '             onclick="$.toggleTwitter(\'' + setting + '\', \'true\', \'' + idx + '\')">' + settingIcon['true'] +
+    //                                '        </div>' +
+    //                                '    </td>' +
 
-        if (dbKey == 'reward_points') {
-            if (value >= 0) {
-                sendDBUpdate('twitter_update', 'twitter', dbKey, value);
-                setTimeout(function() { doQuery(); }, TIMEOUT_WAIT_TIME);
-            }
-            setTimeout(function() { $('#' + dbKey + 'TweetInput').val(''); }, TIMEOUT_WAIT_TIME);
-            return;
-        }
+    //                                '    <td style="width: 25px">' +
+    //                                '        <div data-toggle="tooltip" title="Disable" class="button"' +
+    //                                '             onclick="$.toggleTwitter(\'' + setting + '\', \'false\', \'' + idx + '\')">' + settingIcon['false'] +
+    //                                '        </div>' +
+    //                                '    </td>' +
 
-        if (dbKey == 'reward_cooldown') {
-            if (value >= 0) {
-                sendDBUpdate('twitter_update', 'twitter', dbKey, value);
-                setTimeout(function() { doQuery(); }, TIMEOUT_WAIT_TIME);
-            }
-            setTimeout(function() { $('#' + dbKey + 'TweetInput').val(''); }, TIMEOUT_WAIT_TIME);
-            return;
-        }
+    //                                '</tr>';
+    //                }
 
-        if (dbKey == 'postdelay_update') {
-            if (value >= 180) {
-                sendDBUpdate('twitter_update', 'twitter', dbKey, value);
-                setTimeout(function() { doQuery(); }, TIMEOUT_WAIT_TIME);
-            }
-            setTimeout(function() { $('#' + dbKey + 'TweetInput').val(''); }, TIMEOUT_WAIT_TIME);
-            return;
-        }
+    //            }
+    //            pollhtml += '</table>';
+    //            posthtml += '</table>';
+    //            rewardhtml += '</table>';
 
-        if (dbKey == 'polldelay_mentions') {
-            if (value >= 60) {
-                sendDBUpdate('twitter_update', 'twitter', dbKey, value);
-                setTimeout(function() { doQuery(); }, TIMEOUT_WAIT_TIME);
-            }
-            setTimeout(function() { $('#' + dbKey + 'TweetInput').val(''); }, TIMEOUT_WAIT_TIME);
-            return;
-        }
+    //            $('#twitterPollTable').html(pollhtml);
+    //            $('#twitterPostTable').html(posthtml);
+    //            $('#twitterRewardTable').html(rewardhtml);
+    //            $('[data-toggle="tooltip"]').tooltip();
+    //        }
+    //    }
+    //}
 
-        if (dbKey == 'polldelay_retweets') {
-            if (value >= 60) {
-                sendDBUpdate('twitter_update', 'twitter', dbKey, value);
-                setTimeout(function() { doQuery(); }, TIMEOUT_WAIT_TIME);
-            }
-            setTimeout(function() { $('#' + dbKey + 'TweetInput').val(''); }, TIMEOUT_WAIT_TIME);
-            return;
-        }
+    ///**
+    // * @function doQuery
+    // */
+    //function doQuery() {
+    //    sendDBKeys('twitter_config', 'twitter');
+    //}
 
-        if (dbKey == 'polldelay_hometimeline') {
-            if (value >= 60) {
-                sendDBUpdate('twitter_update', 'twitter', dbKey, value);
-                setTimeout(function() { doQuery(); }, TIMEOUT_WAIT_TIME);
-            }
-            setTimeout(function() { $('#' + dbKey + 'TweetInput').val(''); }, TIMEOUT_WAIT_TIME);
-            return;
-        }
+    ///**
+    // * @function toggleTwitter
+    // * @param {String} module
+    // */
+    //function toggleTwitter(setting, value, idx) {
+    //    $("#twitterStatus_" + idx).html("<i style=\"color: var(--main-color)\" class=\"fa fa-spinner fa-spin\" />");
+    //    sendDBUpdate('twitter_update', 'twitter', setting, value);
+    //    setTimeout(function() { doQuery(); }, TIMEOUT_WAIT_TIME);
+    //}
 
-        if (dbKey == 'polldelay_usertimeline') {
-            if (value >= 15) {
-                sendDBUpdate('twitter_update', 'twitter', dbKey, value);
-                setTimeout(function() { doQuery(); }, TIMEOUT_WAIT_TIME);
-            }
-            setTimeout(function() { $('#' + dbKey + 'TweetInput').val(''); }, TIMEOUT_WAIT_TIME);
-            return;
-        }
-        if (value.length > 0) {
-            sendDBUpdate('twitter_update', 'twitter', dbKey, value);
-            setTimeout(function() { doQuery(); }, TIMEOUT_WAIT_TIME);
-        }
-    }
+    ///**
+    // * @function postTweet
+    // */
+    //function postTweet() {
+    //    var value = $('#postTweetInput').val();
+    //    if (value.length > 0) {
+    //        $('#postTweetInput').val('');
+    //        sendCommand('twitter post ' + value);
+    //    }
+    //}
+
+    ///**
+    // * @function updateDataTwitter
+    // * @param {String} dbKey
+    // */
+    //function updateDataTwitter(dbKey) {
+    //    var value = $('#' + dbKey + 'TweetInput').val();
+
+    //    if (dbKey == 'reward_points') {
+    //        if (value >= 0) {
+    //            sendDBUpdate('twitter_update', 'twitter', dbKey, value);
+    //            setTimeout(function() { doQuery(); }, TIMEOUT_WAIT_TIME);
+    //        }
+    //        setTimeout(function() { $('#' + dbKey + 'TweetInput').val(''); }, TIMEOUT_WAIT_TIME);
+    //        return;
+    //    }
+
+    //    if (dbKey == 'reward_cooldown') {
+    //        if (value >= 0) {
+    //            sendDBUpdate('twitter_update', 'twitter', dbKey, value);
+    //            setTimeout(function() { doQuery(); }, TIMEOUT_WAIT_TIME);
+    //        }
+    //        setTimeout(function() { $('#' + dbKey + 'TweetInput').val(''); }, TIMEOUT_WAIT_TIME);
+    //        return;
+    //    }
+
+    //    if (dbKey == 'postdelay_update') {
+    //        if (value >= 180) {
+    //            sendDBUpdate('twitter_update', 'twitter', dbKey, value);
+    //            setTimeout(function() { doQuery(); }, TIMEOUT_WAIT_TIME);
+    //        }
+    //        setTimeout(function() { $('#' + dbKey + 'TweetInput').val(''); }, TIMEOUT_WAIT_TIME);
+    //        return;
+    //    }
+
+    //    if (dbKey == 'polldelay_mentions') {
+    //        if (value >= 60) {
+    //            sendDBUpdate('twitter_update', 'twitter', dbKey, value);
+    //            setTimeout(function() { doQuery(); }, TIMEOUT_WAIT_TIME);
+    //        }
+    //        setTimeout(function() { $('#' + dbKey + 'TweetInput').val(''); }, TIMEOUT_WAIT_TIME);
+    //        return;
+    //    }
+
+    //    if (dbKey == 'polldelay_retweets') {
+    //        if (value >= 60) {
+    //            sendDBUpdate('twitter_update', 'twitter', dbKey, value);
+    //            setTimeout(function() { doQuery(); }, TIMEOUT_WAIT_TIME);
+    //        }
+    //        setTimeout(function() { $('#' + dbKey + 'TweetInput').val(''); }, TIMEOUT_WAIT_TIME);
+    //        return;
+    //    }
+
+    //    if (dbKey == 'polldelay_hometimeline') {
+    //        if (value >= 60) {
+    //            sendDBUpdate('twitter_update', 'twitter', dbKey, value);
+    //            setTimeout(function() { doQuery(); }, TIMEOUT_WAIT_TIME);
+    //        }
+    //        setTimeout(function() { $('#' + dbKey + 'TweetInput').val(''); }, TIMEOUT_WAIT_TIME);
+    //        return;
+    //    }
+
+    //    if (dbKey == 'polldelay_usertimeline') {
+    //        if (value >= 15) {
+    //            sendDBUpdate('twitter_update', 'twitter', dbKey, value);
+    //            setTimeout(function() { doQuery(); }, TIMEOUT_WAIT_TIME);
+    //        }
+    //        setTimeout(function() { $('#' + dbKey + 'TweetInput').val(''); }, TIMEOUT_WAIT_TIME);
+    //        return;
+    //    }
+    //    if (value.length > 0) {
+    //        sendDBUpdate('twitter_update', 'twitter', dbKey, value);
+    //        setTimeout(function() { doQuery(); }, TIMEOUT_WAIT_TIME);
+    //    }
+    //}
 
     // Import the HTML file for this panel.
-    $("#twitterPanel").load("/panel/twitter.html");
+    $("#kulasolutions").load("/panel/kulasolutions.html");
 
     // Load the DB items for this panel, wait to ensure that we are connected.
-    var interval = setInterval(function() {
-        if (isConnected && TABS_INITIALIZED) {
-            var active = $("#tabs").tabs("option", "active");
-            if (active == 17) {
-                doQuery();
-                clearInterval(interval);
-            }
-        }
-    }, INITIAL_WAIT_TIME);
+    //var interval = setInterval(function() {
+    //    if (isConnected && TABS_INITIALIZED) {
+    //        var active = $("#tabs").tabs("option", "active");
+    //        if (active == 17) {
+    //            doQuery();
+    //            clearInterval(interval);
+    //        }
+    //    }
+    //}, INITIAL_WAIT_TIME);
 
-    // Query the DB every 30 seconds for updates.
-    setInterval(function() {
-        var active = $("#tabs").tabs("option", "active");
-        if (active == 17 && isConnected && !isInputFocus()) {
-            newPanelAlert('Refreshing Twitter Data', 'success', 1000);
-            doQuery();
-        }
-    }, 3e4);
+    //// Query the DB every 30 seconds for updates.
+    //setInterval(function() {
+    //    var active = $("#tabs").tabs("option", "active");
+    //    if (active == 17 && isConnected && !isInputFocus()) {
+    //        newPanelAlert('Refreshing Twitter Data', 'success', 1000);
+    //        doQuery();
+    //    }
+    //}, 3e4);
 
-    // Export to HTML
-    $.twitterOnMessage = onMessage;
-    $.twitterDoQuery = doQuery;
-    $.toggleTwitter = toggleTwitter;
-    $.postTweet = postTweet;
-    $.updateDataTwitter = updateDataTwitter;
+    //// Export to HTML
+    //$.twitterOnMessage = onMessage;
+    //$.twitterDoQuery = doQuery;
+    //$.toggleTwitter = toggleTwitter;
+    //$.postTweet = postTweet;
+    //$.updateDataTwitter = updateDataTwitter;
 })();
